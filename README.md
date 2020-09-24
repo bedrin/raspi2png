@@ -1,29 +1,33 @@
-# raspi2png
+# raspi2png - docker container doing Raspberry PI screenshots each minute and storing them for 1 day
 
-Utility to take a snapshot of the raspberry pi screen and save it as a PNG file
+# Build
 
-    Usage: raspi2png [--pngname name] [--width <width>] [--height <height>] [--compression <level>] [--delay <delay>] [--display <number>] [--stdout] [--help]
+```
+docker build . -t raspi2png:dev
+```
 
-    --pngname,-p - name of png file to create (default is snapshot.png)
-    --height,-h - image height (default is screen height)
-    --width,-w - image width (default is screen width)
-    --compression,-c - PNG compression level (0 - 9)
-    --delay,-d - delay in seconds (default 0)
-    --display,-D - Raspberry Pi display number (default 0)
-	--stdout,-s - write file to stdout
-    --help,-H - print this usage information
+# Run
 
-## Simple Install
+Using Docker Compose
+```
+---
+version: "2.1"
+services:
+  raspi2png:
+    container_name: raspi2png
+    image: raspi2png:dev
+    restart: always
+    volumes:
+      - /opt/vc:/opt/vc
+      - /media/ssd256/monitoring:/export
+    devices:
+      - /dev/vchiq
+```
 
-Run this command through terminal or CLI screen.
+# Configuration
 
-curl -sL https://raw.githubusercontent.com/AndrewFromMelbourne/raspi2png/master/installer.sh | bash -
+Mount your folder for storing screenshots to /export folder of container
 
-## Manual Building
+# Disclaimer
 
-You will need to install libpng before you build the program. On Raspbian
-
-sudo apt-get install libpng12-dev
-
-Then just type 'make' in the raspi2png directory you cloned from github.
-
+Based on https://github.com/AndrewFromMelbourne/raspi2png
